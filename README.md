@@ -22,7 +22,7 @@
    2. new enum values to add:
       1. CUSTOMER_DOES_NOT_EXIST - for when there is no customer for the particular invoice.
       2. NETWORK_ERROR - for when there are IO issues.
-   4. If an invoice is found, we should generate one and send it to the client. Then mark the invoice with a new state so that it can be picked up in the next run.
+   4. If an invoice is not found, we should generate one and send it to the client. Then mark the invoice with a new state so that it can be picked up in the next run.
    5. Use retry in coroutines-core if there are network errors. Delay the retry to give the network some time to fix itself. If it fails after 3 times (should be configurable), then mark the invoices matching error enum.
    6. Introduce logging. Exceptions and errors to log file and transactions should go to DB for querying.
 2. Using a Clean/Onion architecture approach, this should be in an infrastructure layer where all external systems should live.
