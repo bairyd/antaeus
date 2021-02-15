@@ -40,7 +40,7 @@ class CustomerServiceTest {
     @Test
     fun `will return a list of customers if any exist`() {
         val customers = customerService.fetchAll()
-        assert(customers.size == 2)
+        assert(customers.size == 3)
         assert(customers.find { c -> c.id == validCustomerTwoId }?.currency == Currency.DKK)
         assert(customers.find { c -> c.id == validCustomerThreeId }?.currency == Currency.GBP)
     }

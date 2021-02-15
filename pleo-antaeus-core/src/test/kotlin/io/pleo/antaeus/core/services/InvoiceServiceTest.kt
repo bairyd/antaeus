@@ -3,7 +3,11 @@ package io.pleo.antaeus.core.services
 import io.mockk.every
 import io.mockk.mockk
 import io.pleo.antaeus.core.exceptions.InvoiceNotFoundException
+import io.pleo.antaeus.core.testhelpers.CustomerHelper.Companion.validCustomerOneId
 import io.pleo.antaeus.core.testhelpers.InvoiceHelper
+import io.pleo.antaeus.core.testhelpers.InvoiceHelper.Companion.validInvoiceOneId
+import io.pleo.antaeus.core.testhelpers.InvoiceHelper.Companion.validInvoiceThreeId
+import io.pleo.antaeus.core.testhelpers.InvoiceHelper.Companion.validInvoiceTwoId
 import io.pleo.antaeus.data.AntaeusDal
 import io.pleo.antaeus.models.Currency
 import io.pleo.antaeus.models.InvoiceStatus
@@ -13,10 +17,6 @@ import java.math.BigDecimal
 
 class InvoiceServiceTest {
 
-    private val validInvoiceOneId = 1
-    private val validInvoiceTwoId = 2
-    private val validInvoiceThreeId = 3
-    private val validCustomerId = 1
 
     private val dal = mockk<AntaeusDal> {
         every { fetchInvoice(404) } returns null
@@ -37,7 +37,7 @@ class InvoiceServiceTest {
     fun `will return an invoice if an Id is supplied and matches a record`() {
         val invoice = invoiceService.fetch(validInvoiceOneId)
         assert(invoice.id == validInvoiceOneId)
-        assert(invoice.customerId == validCustomerId)
+        assert(invoice.customerId == validCustomerOneId)
         assert(invoice.amount.value == BigDecimal.TEN)
         assert(invoice.amount.currency == Currency.SEK)
         assert(invoice.status == InvoiceStatus.PAID)
@@ -46,20 +46,20 @@ class InvoiceServiceTest {
     @Test
     fun `will return a list of invoices if any records exist`() {
         val invoices = invoiceService.fetchAll()
-        val invoiceTwo = invoices.find { i -> i.id == validInvoiceTwoId }
+        assert(invoices.size == 8)
 
+        val invoiceTwo = invoices.find { i -> i.id == validInvoiceTwoId }
         assert(invoiceTwo?.id == validInvoiceTwoId)
-        assert(invoiceTwo?.customerId == validCustomerId)
-        assert(invoiceTwo?.amount?.value == BigDecimal.ZERO)
+        assert(invoiceTwo?.customerId == validInvoiceThreeId)
+        assert(invoiceTwo?.amount?.value == BigDecimal.valueOf(150))
         assert(invoiceTwo?.amount?.currency == Currency.USD)
         assert(invoiceTwo?.status == InvoiceStatus.PENDING)
 
         val invoiceThree = invoices.find { i -> i.id == validInvoiceThreeId }
-
         assert(invoiceThree?.id == validInvoiceThreeId)
-        assert(invoiceThree?.customerId == validCustomerId)
-        assert(invoiceThree?.amount?.value == BigDecimal.valueOf(150))
-        assert(invoiceThree?.amount?.currency == Currency.EUR)
+        assert(invoiceThree?.customerId == validCustomerOneId)
+        assert(invoiceThree?.amount?.value == BigDecimal.valueOf(99))
+        assert(invoiceThree?.amount?.currency == Currency.SEK)
         assert(invoiceThree?.status == InvoiceStatus.PAID)
     }
 }
