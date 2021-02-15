@@ -3,11 +3,10 @@ package io.pleo.antaeus.core.services
 import io.mockk.every
 import io.mockk.mockk
 import io.pleo.antaeus.core.exceptions.InvoiceNotFoundException
+import io.pleo.antaeus.core.testhelpers.InvoiceHelper
 import io.pleo.antaeus.data.AntaeusDal
 import io.pleo.antaeus.models.Currency
-import io.pleo.antaeus.models.Invoice
 import io.pleo.antaeus.models.InvoiceStatus
-import io.pleo.antaeus.models.Money
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
@@ -21,18 +20,8 @@ class InvoiceServiceTest {
 
     private val dal = mockk<AntaeusDal> {
         every { fetchInvoice(404) } returns null
-        every { fetchInvoice(validInvoiceOneId) } returns GetValidInvoice()
-        every { fetchInvoices() } returns GetValidInvoices()
-    }
-
-    private fun GetValidInvoice(): Invoice {
-        return Invoice(validInvoiceOneId, validCustomerId, Money(BigDecimal.TEN, Currency.SEK), InvoiceStatus.PAID)
-    }
-
-    private fun GetValidInvoices(): List<Invoice> {
-        return listOf(
-            Invoice(validInvoiceTwoId, validCustomerId, Money(BigDecimal.ZERO, Currency.USD), InvoiceStatus.PENDING),
-            Invoice(validInvoiceThreeId, validCustomerId, Money(BigDecimal.valueOf(150), Currency.EUR), InvoiceStatus.PAID))
+        every { fetchInvoice(validInvoiceOneId) } returns InvoiceHelper.getSingleValidInvoice()
+        every { fetchInvoices() } returns InvoiceHelper.getListOfValidInvoices()
     }
 
     private val invoiceService = InvoiceService(dal = dal)

@@ -3,9 +3,9 @@ package io.pleo.antaeus.core.services
 import io.mockk.every
 import io.mockk.mockk
 import io.pleo.antaeus.core.exceptions.CustomerNotFoundException
+import io.pleo.antaeus.core.testhelpers.CustomerHelper
 import io.pleo.antaeus.data.AntaeusDal
 import io.pleo.antaeus.models.Currency
-import io.pleo.antaeus.models.Customer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -17,16 +17,8 @@ class CustomerServiceTest {
 
     private val dal = mockk<AntaeusDal> {
         every { fetchCustomer(404) } returns null
-        every { fetchCustomer(1) } returns getValidCustomer()
-        every { fetchCustomers() } returns getValidListOfCustomers()
-    }
-
-    private fun getValidCustomer(): Customer {
-        return Customer(validCustomerOneId, Currency.EUR)
-    }
-
-    private fun getValidListOfCustomers(): List<Customer> {
-        return listOf(Customer(validCustomerTwoId, Currency.DKK), Customer(validCustomerThreeId, Currency.GBP))
+        every { fetchCustomer(1) } returns CustomerHelper.getSingleValidCustomer()
+        every { fetchCustomers() } returns CustomerHelper.getListOfValidCustomers()
     }
 
     private val customerService = CustomerService(dal = dal)
