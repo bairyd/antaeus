@@ -18,7 +18,7 @@
 
 ## Proposed Solutions:
 1. Exception Logic: 
-   1. We can assume that the Customer.Currency is based off of the customer's location of personal settings. If so, it's more likely that the mismatch is the usage of the incorrect symbol and not a miscalculation against a different currency. We should just do a swap of the symbol. We should log this error.
+   1. We can assume that the Customer.Currency is based off of the customer's location or personal settings. If so, it's more likely that the mismatch is the usage of the incorrect symbol and not a miscalculation against a different currency. We should just do a swap of the symbol. We should log this error.
    2. new enum values to add:
       1. CUSTOMER_DOES_NOT_EXIST - for when there is no customer for the particular invoice.
       2. NETWORK_ERROR - for when there are IO issues.
